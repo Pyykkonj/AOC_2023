@@ -73,13 +73,7 @@ void extract_Elf_bags(char *filebuf)
 
 	printf("\r\nElf carrying most calories: %d, elf index: %d\r\n", mostCalories, mostCaloriesElf);
 
-	clear();
-	setCursor(0,0);
-	print("Most calories:");
-	setCursor(0,1);
-	char buf[10];
-	sprintf(buf, "%d", mostCalories);
-	print(buf);
+
 
 	sortArray(&elfCalories, false);
 
@@ -92,6 +86,18 @@ void extract_Elf_bags(char *filebuf)
 			getArray(&elfCalories, i-1) +
 			getArray(&elfCalories, i-2) +
 			getArray(&elfCalories, i-3));
+
+
+	printStringInt("Most calories:", mostCalories, false);
+	HAL_Delay(3000);
+
+	printStringInt("SUM of top three",
+			getArray(&elfCalories, i-1) +
+			getArray(&elfCalories, i-2) +
+			getArray(&elfCalories, i-3),
+			false);
+	HAL_Delay(3000);
+
 }
 
 
@@ -99,11 +105,7 @@ void day_1(char *input_filebuf)
 {
 	printf("Hello from day 1 \r\n");
 
-	clear();
-	print("Day 1");
-	setCursor(0,1);
-	print("Calculating...");
+	printStringString("Day 1", "Calculating...", false);
 
 	extract_Elf_bags(input_filebuf);
-
 }

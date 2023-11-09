@@ -18,6 +18,7 @@
 /*Character display*/
 #include <main.h>
 #include <LiquidCrystal.h>
+#include <ui.h>
 
 FIL file;
 FILINFO f_info;

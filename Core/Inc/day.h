@@ -11,6 +11,7 @@
 /*Character display*/
 #include <main.h>
 #include <LiquidCrystal.h>
+#include <ui.h>
 
 // strtok, strcmp etc
 #include <stdio.h>

@@ -27,6 +27,7 @@
 #include <File_Handling.h>
 #include <advent_of_code.h>
 #include <LiquidCrystal.h>
+#include <ui.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,10 +120,7 @@ int main(void)
 
   LiquidCrystal(GPIOB, GPIO_PIN_13, 255, GPIO_PIN_14, GPIO_PIN_15, GPIO_PIN_5, GPIO_PIN_4, GPIO_PIN_10);
 
-  print(" Advent of Code");
-  setCursor(0,1);
-  print("      2023");
-
+  printStringInt("Advent of Code", 2023, true);
 
   run_Advent_of_code();
 
