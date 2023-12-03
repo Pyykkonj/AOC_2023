@@ -177,7 +177,7 @@ void run_Advent_of_code()
 			day_1(input_filebuf);
 			break;
 		case 2:
-			day_2();
+			day_2(input_filebuf);
 			break;
 		case 3:
 			day_3();

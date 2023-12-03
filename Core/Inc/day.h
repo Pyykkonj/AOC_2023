@@ -21,9 +21,12 @@
 // Dynamic array etc
 #include <data_structures.h>
 
+// Bool
+#include <stdbool.h>
+
 
 void day_1(char *input_filebuf);
-void day_2();
+void day_2(char *input_filebuf);
 void day_3();
 
 

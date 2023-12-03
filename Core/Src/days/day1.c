@@ -5,40 +5,119 @@
  *      Author: juho.pyykkonen
  */
 #include <day.h>
+#include <stdbool.h>
 
-void extract_Elf_bags(char *filebuf)
+
+const char lettersChars[10][7] = {"zero\0", "one\0", "two\0", "three\0", "four\0", "five\0", "six\0", "seven\0", "eight\0", "nine\0"};
+const int charsLen[10] = { 4, 3, 3, 5, 4, 4, 3, 5, 5, 4};
+
+int isLetter(const char *a)
 {
-	Array elfCalories;
+	for (int i = 0; i < 10; i++)
+	{
+		int ret = strncmp(lettersChars[i], a, charsLen[i]);
+		if (ret == 0)
+		{
+			return i;
+		}
+	}
 
-	initDynamicArray(&elfCalories, 10);
+	return -1;
+
+}
+
+bool isNumber(char a)
+{
+	if (a >= 48 && a <= 57)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int charToInt(char a)
+{
+	if(isNumber(a))
+	{
+		return (int) a - 48;
+	}
+	else {
+		return (int)-1;
+	}
+}
+
+
+void extract_calibration_values(char *filebuf)
+{
+
+
+	int firstDigit = -1;
+	int lastDigit = -1;
+
+	int sum = 0;
 
 	int count = 0;
 	char *previous = NULL;
 	char *current = &filebuf[count];
 
 	{
-		// Handle first
-		printf("%d \r\n", atoi(current));
-		int sum = atoi(current);
 
 		while(*current != 0)
 		{
 
-			if(*current == '\r' && *previous == '\n')
+			if (*previous == '\n')
 			{
-				printf("EMPTY LINE \r\n");
-				printf("SUM: %d\r\n", sum);
-				insertArray(&elfCalories, sum);
-				sum = 0;
+				printf("New line\r\n");
+
+				char buf[3];
+				sprintf(buf, "%d%d", firstDigit, lastDigit);
+
+				if(firstDigit != -1 && lastDigit != -1)
+				{
+					sum = sum + atoi(buf);
+				}
+
+				printf("buf: %s\r\n", buf);
+				printf("sum: %d \r\n", sum);
+
+				firstDigit = -1;
+				lastDigit = -1;
+
 			}
-			else if (*previous == '\n')
+
 			{
-				printf("%d \r\n", atoi(current));
-				sum += atoi(current);
-			}
-			else
-			{
-				//printf("%c", *current);
+				if (isNumber(*current))
+				{
+					if(firstDigit == -1 && lastDigit == -1)
+					{
+						firstDigit = charToInt(*current);
+						lastDigit = charToInt(*current);
+					}
+					else
+					{
+						lastDigit = charToInt(*current);
+					}
+				}
+				else
+				{
+					int ret = isLetter(current);
+					//printf("ret: %d \r\n", ret);
+					if (ret != -1)
+					{
+						if(firstDigit == -1 && lastDigit == -1)
+						{
+							firstDigit = ret;
+							lastDigit = ret;
+						}
+						else
+						{
+							lastDigit = ret;
+						}
+					}
+				}
 			}
 
 			count++;
@@ -46,57 +125,17 @@ void extract_Elf_bags(char *filebuf)
 			current = &filebuf[count];
 		}
 
-		// Handle last
-		insertArray(&elfCalories, sum);
+		// handle last
+		char buf[3];
+		sprintf(buf, "%d%d", firstDigit, lastDigit);
+
+		sum = sum + atoi(buf);
+		printf("buf: %s\r\n", buf);
+		printf("sum: %d \r\n", sum);
+
+		printStringInt("Day 1 sum:", sum, false);
+
 	}
-
-
-	printf("\r\n");
-
-	printf("ELf calories total \r\n");
-	int totalElfes = getArraySize(&elfCalories);
-	int calories = 0;
-	int mostCalories = 0;
-	int mostCaloriesElf = 0;
-	int i = 0;
-
-	for (i=0 ; i<totalElfes; i++)
-	{
-		calories = getArray(&elfCalories, i);
-		printf("Elf %d, calories: %d \r\n", i, calories);
-		if (calories > mostCalories)
-		{
-			mostCalories = calories;
-			mostCaloriesElf = i;
-		}
-	}
-
-	printf("\r\nElf carrying most calories: %d, elf index: %d\r\n", mostCalories, mostCaloriesElf);
-
-
-
-	sortArray(&elfCalories, false);
-
-	printf("Top three: \r\n");
-	printf("%d \r\n", getArray(&elfCalories, i-1));
-	printf("%d \r\n", getArray(&elfCalories, i-2));
-	printf("%d \r\n", getArray(&elfCalories, i-3));
-
-	printf("SUM of top three: %d \r\n",
-			getArray(&elfCalories, i-1) +
-			getArray(&elfCalories, i-2) +
-			getArray(&elfCalories, i-3));
-
-
-	printStringInt("Most calories:", mostCalories, false);
-	HAL_Delay(3000);
-
-	printStringInt("SUM of top three",
-			getArray(&elfCalories, i-1) +
-			getArray(&elfCalories, i-2) +
-			getArray(&elfCalories, i-3),
-			false);
-	HAL_Delay(3000);
 
 }
 
@@ -107,5 +146,5 @@ void day_1(char *input_filebuf)
 
 	printStringString("Day 1", "Calculating...", false);
 
-	extract_Elf_bags(input_filebuf);
+	extract_calibration_values(input_filebuf);
 }
